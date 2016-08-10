@@ -52,7 +52,8 @@ public class SpringCacheBeanFactory implements BeanFactoryInterface{
     @Override
     public <T> T get(Class<?> clazz, String id) {
         String beanId = (id != null ) ? id : getBeanId(clazz);
-        return (T) beanFactory.getSingleton(beanId);
+        T bean = (T) beanFactory.getSingleton(beanId);
+        return (bean == null) ? (T)beanFactory.getBean(clazz) : bean;
     }
 
     private String getBeanId(Class<?> clazz){
