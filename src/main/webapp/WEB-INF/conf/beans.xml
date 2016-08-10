@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- EasyCache缓存配置 -->
+    <bean id="cacheConfigFactory" class="com.yy.ecache.CacheConfigFactory">
+        <property name="defaultExpiredSeconds" value="300"></property>
+        <property name="schedulerCorePoolSize" value="64"></property>
+        <property name="retryRegisterMSeconds" value="1000"></property>
+        <property name="avoidServerOverload" value="false"></property>
+        <property name="lockIsFair" value="false"></property>
+        <property name="lockSegments" value="128"></property>
+    </bean>
+    <bean id="cacheConfig" class="com.ecache.CacheConfig" factory-bean="cacheConfigFactory" factory-method="create"></bean>
+
+    <!-- EasyCache的本地缓存配置 -->
+    <bean id="localCache" class="com.ecache.LocalCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
+    </bean>
+
+    <!-- EasyCache的远程缓存配置 -->
+    <bean id="redisConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="200"></property>
+        <property name="maxIdle" value="20"></property>
+        <property name="minIdle" value="20"></property>
+        <property name="maxWaitMillis" value="5000"></property>
+    </bean>
+    <bean id="redisCache" class="com.yy.ecache.RedisCache">
+        <constructor-arg ref="redisConfig"></constructor-arg>
+        <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
+        <constructor-arg name="port" value="6380"></constructor-arg>
+        <constructor-arg name="timeout" value="2000"></constructor-arg>
+    </bean>
+    <bean id="remoteCache" class="com.ecache.RemoteCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
+        <constructor-arg ref="redisCache"></constructor-arg>
+    </bean>
+
+</beans>
