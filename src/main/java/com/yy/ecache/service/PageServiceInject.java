@@ -2,7 +2,7 @@ package com.yy.ecache.service;
 
 import com.ecache.MissCacheHandler;
 import com.ecache.RemoteCache;
-import com.ecache.RemoteCacheType;
+import com.ecache.CacheType;
 import com.yy.ecache.dao.PageDao;
 import com.yy.ecache.model.PageData;
 import com.yy.ecache.model.UserInfo;
@@ -27,7 +27,7 @@ public class PageServiceInject {
 
     public PageData<UserInfo> page(String biz, int moduleId){
         String key = "PageServiceInject|page|"+biz+"|"+moduleId;
-        PageData<UserInfo> pageData = remoteCache.get(key, new RemoteCacheType<PageData<UserInfo>>(){});
+        PageData<UserInfo> pageData = remoteCache.get(key, new CacheType<PageData<UserInfo>>(){});
         if(pageData == null){
             long seconds = System.currentTimeMillis()/1000;
             System.out.println(seconds + " : " + "page from dao");
@@ -44,7 +44,7 @@ public class PageServiceInject {
         Map<String , PageData<UserInfo>> pageDataMap = remoteCache.get(
                 key,
                 60,
-                new RemoteCacheType<Map<String , PageData<UserInfo>>>() {},
+                new CacheType<Map<String , PageData<UserInfo>>>() {},
                 new MissCacheHandler<Map<String , PageData<UserInfo>>>() {
                     @Override
                     public Map<String , PageData<UserInfo>> getData() {
@@ -61,7 +61,7 @@ public class PageServiceInject {
         List<UserInfo> list = remoteCache.get(
                 cacheKey,
                 60,
-                new RemoteCacheType<List<UserInfo>>() {},
+                new CacheType<List<UserInfo>>() {},
                 new MissCacheHandler<List<UserInfo>>() {
                     @Override
                     public List<UserInfo> getData() {
