@@ -1,9 +1,7 @@
 package com.yy.ecache;
 
 import com.ecache.bean.BeanFactoryInterface;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -33,12 +31,6 @@ public class SpringCacheBeanFactory implements BeanFactoryInterface{
         String beanId = (id != null ) ? id : getBeanId(clazz);
         if(beanFactory.containsBean(beanId)){
             beanFactory.destroySingleton(beanId);
-            beanFactory.registerSingleton(beanId, object);
-        }else{
-            BeanDefinition beanDefinition = new GenericBeanDefinition();
-            beanDefinition.setBeanClassName(clazz.getName());
-            beanDefinition.setScope("singleton");
-            beanFactory.registerBeanDefinition(beanId, beanDefinition);
             beanFactory.registerSingleton(beanId, object);
         }
     }
