@@ -177,16 +177,15 @@
             this.avoidServerOverload = avoidServerOverload;
         }
     }
+继承ContextLoaderListener，重写contextInitialized方法
 
-继承DispatcherServlet，重写init方法
-
-    public class DispatcherServletWithEasyCache extends DispatcherServlet {
+    public class ContextLoaderListenerWithEasyCache extends ContextLoaderListener {
 
         @Override
-        public void init(ServletConfig servletConfig) throws ServletException {
-            super.init(servletConfig);
+        public void contextInitialized(ServletContextEvent event) {
+            super.contextInitialized(event);
 
-            ConfigurableWebApplicationContext applicationContext = (ConfigurableWebApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());
+            ConfigurableWebApplicationContext applicationContext = (ConfigurableWebApplicationContext) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
             SpringCacheInjector cacheInjector = new SpringCacheInjector(applicationContext);
             SpringCacheBeanFactory cacheBeanFactory = new SpringCacheBeanFactory(applicationContext);
             CacheInterceptor cacheInterceptor = new CacheInterceptor(cacheBeanFactory, cacheInjector);
@@ -196,19 +195,28 @@
 
 web.xml配置
 
-    <servlet>
-        <servlet-name>ecache</servlet-name>
-        <servlet-class>com.yy.ecache.DispatcherServletWithEasyCache</servlet-class>
-        <init-param>
+    <context-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value></param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ecache</servlet-name>
-        <url-pattern>*.action</url-pattern>
-    </servlet-mapping>
+            <param-value>WEB-INF/conf/applicationContext.xml</param-value>
+        </context-param>
+
+        <listener>
+            <listener-class>com.yy.ecache.ContextLoaderListenerWithEasyCache</listener-class>
+        </listener>
+
+        <servlet>
+            <servlet-name>ecache</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value></param-value>
+            </init-param>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>ecache</servlet-name>
+            <url-pattern>*.action</url-pattern>
+        </servlet-mapping>
 
 spring xml配置
 

@@ -11,12 +11,12 @@
     </context-param>
 
     <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        <listener-class>com.yy.ecache.ContextLoaderListenerWithEasyCache</listener-class>
     </listener>
 
     <servlet>
         <servlet-name>ecache</servlet-name>
-        <servlet-class>com.yy.ecache.DispatcherServletWithEasyCache</servlet-class>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value></param-value>
