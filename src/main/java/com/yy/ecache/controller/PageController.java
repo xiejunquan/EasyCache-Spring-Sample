@@ -1,6 +1,7 @@
 package com.yy.ecache.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yy.ecache.model.BizModule;
 import com.yy.ecache.model.PageData;
 import com.yy.ecache.model.UserInfo;
 import com.yy.ecache.service.PageService;
@@ -29,7 +30,7 @@ public class PageController {
     @RequestMapping("/page")
     public @ResponseBody String page(String biz, int moduleId){
         JSONObject json = new JSONObject();
-        PageData<UserInfo> pageData = pageService.page(biz, moduleId);
+        PageData<UserInfo> pageData = pageService.page(new BizModule(biz, moduleId));
         json.put("page", pageData);
         return json.toJSONString();
     }

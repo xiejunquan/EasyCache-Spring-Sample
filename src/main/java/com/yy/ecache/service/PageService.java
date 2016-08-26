@@ -5,6 +5,7 @@ import com.ecache.annotation.LocalCache;
 import com.ecache.annotation.RemoteCache;
 import com.yy.ecache.RedisCache;
 import com.yy.ecache.dao.PageDao;
+import com.yy.ecache.model.BizModule;
 import com.yy.ecache.model.PageData;
 import com.yy.ecache.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,11 @@ public class PageService {
     @Autowired
     private PageDao pageDao;
 
-    @LocalCache(key = "$1$2", expire = 60)
-    public PageData<UserInfo> page(String biz, int moduleId){
+    @LocalCache(key = "$1.biz $1.moduleId", expire = 60)
+    public PageData<UserInfo> page(BizModule bm){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "page from dao");
-        return pageDao.page(biz, moduleId);
+        return pageDao.page(bm.getBiz(), bm.getModuleId());
     }
 
     @RemoteCache(key = "$1$2", expire = 60)
