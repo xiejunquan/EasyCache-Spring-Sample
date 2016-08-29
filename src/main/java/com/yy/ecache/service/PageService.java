@@ -18,7 +18,7 @@ import java.util.Map;
  * @author 谢俊权
  * @create 2016/8/3 15:18
  */
-@Service("hello-world")
+@Service
 public class PageService {
 
     @Autowired

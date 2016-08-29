@@ -61,8 +61,6 @@ public class SpringCacheBeanFactory implements BeanFactoryInterface{
                             )
                     )
         );
-        String name = clazz.getSimpleName();
-        String beanName = name.toLowerCase().substring(0, 1) + name.substring(1);
-        return (id == null) ? beanName : id;
+        return (id == null) ? clazz.getName() : id;
     }
 }

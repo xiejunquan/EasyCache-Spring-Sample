@@ -45,23 +45,23 @@
         }
 
         private String getBeanId(Class<?> clazz){
-            Controller controller = clazz.getAnnotation(Controller.class);
-            Service service = clazz.getAnnotation(Service.class);
-            Repository repository = clazz.getAnnotation(Repository.class);
-            Component component = clazz.getAnnotation(Component.class);
-            String id = (controller != null && !"".equals(controller.value())) ? controller.value() : (
-                        (service != null && !"".equals(service.value())) ? service.value() : (
-                                (repository != null && !"".equals(repository.value())) ? repository.value() : (
-                                        (component != null && !"".equals(component.value())) ? component.value() : null
+                Controller controller = clazz.getAnnotation(Controller.class);
+                Service service = clazz.getAnnotation(Service.class);
+                Repository repository = clazz.getAnnotation(Repository.class);
+                Component component = clazz.getAnnotation(Component.class);
+                String id = (controller != null && !"".equals(controller.value())) ? controller.value() : (
+                            (service != null && !"".equals(service.value())) ? service.value() : (
+                                    (repository != null && !"".equals(repository.value())) ? repository.value() : (
+                                            (component != null && !"".equals(component.value())) ? component.value() : null
 
-                                )
-                        )
-            );
-            String name = clazz.getSimpleName();
-            String beanName = name.toLowerCase().substring(0, 1) + name.substring(1);
-            return (id == null) ? beanName : id;
-        }
+                                    )
+                            )
+                );
+                return (id == null) ? clazz.getName() : id;
+            }
     }
+
+默认地, 在spring中beanName都是以简单类名命名的, 例如com.yy.ecache.PageService在spring的beanFactory中, 是以pageService来命名的. 所以, 如果在不同的包下有相同名称的类, 也是会报错的. 为了解决这个问题, 我们可以重写spring的命名定义类AnnotationBeanNameGenerator. 然后在扫描类配置中, 添加类命名的类. 具体看配置文件. 因为重写AnnotationBeanNameGenerator类时我使用了类全名作为类的命名, 所以当自定义id为null的时候, 直接返回clazz.getName();
 
 
 实现注入器的接口
@@ -220,36 +220,58 @@ web.xml配置
 
 spring xml配置
 
+    <mvc:annotation-driven/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator"  base-package="com.yy.ecache.controller"/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator" base-package="com.yy.ecache.service"/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator" base-package="com.yy.ecache.dao"/>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="viewResolvers">
+            <list>
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix" value="/WEB-INF/jsp/"/>
+                    <property name="suffix" value=".jsp"/>
+                </bean>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+            </list>
+        </property>
+    </bean>
+
     <!-- EasyCache缓存配置 -->
-        <bean id="cacheConfigFactory" class="com.yy.ecache.CacheConfigFactory">
-            <property name="defaultExpiredSeconds" value="300"></property>
-            <property name="schedulerCorePoolSize" value="64"></property>
-            <property name="retryRegisterMSeconds" value="1000"></property>
-            <property name="avoidServerOverload" value="false"></property>
-            <property name="lockIsFair" value="false"></property>
-            <property name="lockSegments" value="128"></property>
-        </bean>
-        <bean id="cacheConfig" class="com.ecache.CacheConfig" factory-bean="cacheConfigFactory" factory-method="create"></bean>
+    <bean id="cacheConfigFactory" class="com.yy.ecache.CacheConfigFactory">
+        <property name="defaultExpiredSeconds" value="300"></property>
+        <property name="schedulerCorePoolSize" value="64"></property>
+        <property name="retryRegisterMSeconds" value="1000"></property>
+        <property name="avoidServerOverload" value="false"></property>
+        <property name="lockIsFair" value="false"></property>
+        <property name="lockSegments" value="128"></property>
+    </bean>
+    <bean id="cacheConfig" class="com.ecache.CacheConfig" factory-bean="cacheConfigFactory" factory-method="create"></bean>
 
-        <!-- EasyCache的本地缓存配置 -->
-        <bean id="localCache" class="com.ecache.LocalCache">
-            <constructor-arg ref="cacheConfig"></constructor-arg>
-        </bean>
+    <!-- EasyCache的本地缓存配置 -->
+    <bean id="localCache" class="com.ecache.LocalCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
+    </bean>
 
-        <!-- EasyCache的远程缓存配置 -->
-        <bean id="redisConfig" class="redis.clients.jedis.JedisPoolConfig">
-            <property name="maxTotal" value="200"></property>
-            <property name="maxIdle" value="20"></property>
-            <property name="minIdle" value="20"></property>
-            <property name="maxWaitMillis" value="5000"></property>
-        </bean>
-        <bean id="redisCache" class="com.yy.ecache.RedisCache">
-            <constructor-arg ref="redisConfig"></constructor-arg>
-            <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
-            <constructor-arg name="port" value="6380"></constructor-arg>
-            <constructor-arg name="timeout" value="2000"></constructor-arg>
-        </bean>
-        <bean id="remoteCache" class="com.ecache.RemoteCache">
-            <constructor-arg ref="cacheConfig"></constructor-arg>
-            <constructor-arg ref="redisCache"></constructor-arg>
-        </bean>
+    <!-- EasyCache的远程缓存配置 -->
+    <bean id="redisConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="200"></property>
+        <property name="maxIdle" value="20"></property>
+        <property name="minIdle" value="20"></property>
+        <property name="maxWaitMillis" value="5000"></property>
+    </bean>
+    <bean id="redisCache" class="com.yy.ecache.RedisCache">
+        <constructor-arg ref="redisConfig"></constructor-arg>
+        <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
+        <constructor-arg name="port" value="6380"></constructor-arg>
+        <constructor-arg name="timeout" value="2000"></constructor-arg>
+    </bean>
+    <bean id="remoteCache" class="com.ecache.RemoteCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
+        <constructor-arg ref="redisCache"></constructor-arg>
+    </bean>
