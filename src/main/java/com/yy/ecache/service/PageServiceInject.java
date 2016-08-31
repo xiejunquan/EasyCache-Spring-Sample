@@ -39,15 +39,17 @@ public class PageServiceInject {
         return pageData;
     }
 
-    public Map<String , PageData<UserInfo>> pageMap(final String biz, final int moduleId){
+    public Map<String , PageData<UserInfo>> pageMap(String biz, int moduleId){
         String key = "PageServiceInject|pageMap|"+biz+"|"+moduleId;
         Map<String , PageData<UserInfo>> pageDataMap = remoteCache.get(
                 key,
                 60,
                 new CacheType<Map<String , PageData<UserInfo>>>() {},
-                new MissCacheHandler<Map<String , PageData<UserInfo>>>() {
+                new MissCacheHandler<Map<String , PageData<UserInfo>>>(biz, moduleId) {
                     @Override
                     public Map<String , PageData<UserInfo>> getData() {
+                        String biz = (String) params.get(0);
+                        int moduleId = (int) params.get(1);
                         long seconds = System.currentTimeMillis()/1000;
                         System.out.println(seconds + " : " + "pageMap from dao");
                         return pageDao.pageMap(biz, moduleId);
@@ -56,15 +58,17 @@ public class PageServiceInject {
         return pageDataMap;
     }
 
-    public List<UserInfo> list(final String biz, final int moduleId, String key){
+    public List<UserInfo> list(String biz, int moduleId, String key){
         String cacheKey = "PageServiceInject|list|" + key;
         List<UserInfo> list = remoteCache.get(
                 cacheKey,
                 60,
                 new CacheType<List<UserInfo>>() {},
-                new MissCacheHandler<List<UserInfo>>() {
+                new MissCacheHandler<List<UserInfo>>(biz, moduleId) {
                     @Override
                     public List<UserInfo> getData() {
+                        String biz = (String) params.get(0);
+                        int moduleId = (int) params.get(1);
                         long seconds = System.currentTimeMillis()/1000;
                         System.out.println(seconds + " : " + "list from dao");
                         return pageDao.page(biz, moduleId).getData();
