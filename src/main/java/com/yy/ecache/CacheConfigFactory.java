@@ -8,11 +8,9 @@ import com.ecache.CacheConfig;
  */
 public class CacheConfigFactory {
 
-    private int defaultExpiredSeconds = 60 * 60 * 24;
+    private int defaultExpiredSeconds = 60 * 60;
 
     private int schedulerCorePoolSize = 64;
-
-    private int retryRegisterMSeconds = 1000 * 2;
 
     private int lockSegments = 32;
 
@@ -20,15 +18,17 @@ public class CacheConfigFactory {
 
     private boolean avoidServerOverload = false;
 
+    private int clearSchedulerIntervalSeconds = 60 * 60 * 24;
+
 
     public CacheConfig create(){
         CacheConfig config = new CacheConfig.Builder()
                 .defaultExpiredSeconds(defaultExpiredSeconds)
                 .schedulerCorePoolSize(schedulerCorePoolSize)
-                .retryRegisterMSeconds(retryRegisterMSeconds)
                 .lockSegments(lockSegments)
                 .lockIsFair(lockIsFair)
                 .avoidServerOverload(avoidServerOverload)
+                .clearSchedulerIntervalSeconds(clearSchedulerIntervalSeconds)
                 .build();
         return config;
     }
@@ -41,8 +41,8 @@ public class CacheConfigFactory {
         this.schedulerCorePoolSize = schedulerCorePoolSize;
     }
 
-    public void setRetryRegisterMSeconds(int retryRegisterMSeconds) {
-        this.retryRegisterMSeconds = retryRegisterMSeconds;
+    public void setClearSchedulerIntervalSeconds(int clearSchedulerIntervalSeconds) {
+        this.clearSchedulerIntervalSeconds = clearSchedulerIntervalSeconds;
     }
 
     public void setLockSegments(int lockSegments) {

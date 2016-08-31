@@ -16,6 +16,7 @@
         <property name="avoidServerOverload" value="false"></property>
         <property name="lockIsFair" value="false"></property>
         <property name="lockSegments" value="128"></property>
+        <property name="clearSchedulerIntervalSeconds" value="3600"></property>
     </bean>
     <bean id="cacheConfig" class="com.ecache.CacheConfig" factory-bean="cacheConfigFactory" factory-method="create"></bean>
 
