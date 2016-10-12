@@ -12,9 +12,9 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <mvc:annotation-driven/>
-    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator"  base-package="com.yy.ecache.controller"/>
-    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator" base-package="com.yy.ecache.service"/>
-    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGennerator" base-package="com.yy.ecache.dao"/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGenerator" base-package="com.yy.ecache.controller"/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGenerator" base-package="com.yy.ecache.service"/>
+    <context:component-scan name-generator="com.yy.ecache.EcacheAnnotationBeanNameGenerator" base-package="com.yy.ecache.dao"/>
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="viewResolvers">

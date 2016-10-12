@@ -7,7 +7,7 @@ import org.springframework.context.annotation.AnnotationBeanNameGenerator;
  * @author 谢俊权
  * @create 2016/8/29 11:10
  */
-public class EcacheAnnotationBeanNameGennerator extends AnnotationBeanNameGenerator{
+public class EcacheAnnotationBeanNameGenerator extends AnnotationBeanNameGenerator{
     @Override
     protected String buildDefaultBeanName(BeanDefinition definition) {
         return definition.getBeanClassName();
