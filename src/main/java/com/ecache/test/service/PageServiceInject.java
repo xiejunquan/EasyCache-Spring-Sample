@@ -1,11 +1,11 @@
-package com.yy.ecache.service;
+package com.ecache.test.service;
 
 import com.ecache.MissCacheHandler;
 import com.ecache.RemoteCache;
 import com.ecache.CacheType;
-import com.yy.ecache.dao.PageDao;
-import com.yy.ecache.model.PageData;
-import com.yy.ecache.model.UserInfo;
+import com.ecache.test.dao.PageDao;
+import com.ecache.test.model.PageData;
+import com.ecache.test.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

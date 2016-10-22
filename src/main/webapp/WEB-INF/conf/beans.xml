@@ -10,7 +10,7 @@
 
 
     <!-- EasyCache缓存配置 -->
-    <bean id="cacheConfigFactory" class="com.yy.ecache.CacheConfigFactory">
+    <bean id="cacheConfigFactory" class="com.ecache.spring.ECacheConfigFactory">
         <property name="defaultExpiredSeconds" value="300"></property>
         <property name="schedulerCorePoolSize" value="64"></property>
         <property name="avoidServerOverload" value="false"></property>
@@ -32,7 +32,7 @@
         <property name="minIdle" value="20"></property>
         <property name="maxWaitMillis" value="5000"></property>
     </bean>
-    <bean id="redisCache" class="com.yy.ecache.RedisCache">
+    <bean id="redisCache" class="com.ecache.test.RedisCache">
         <constructor-arg ref="redisConfig"></constructor-arg>
         <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
         <constructor-arg name="port" value="6380"></constructor-arg>
@@ -41,6 +41,10 @@
     <bean id="remoteCache" class="com.ecache.RemoteCache">
         <constructor-arg ref="cacheConfig"></constructor-arg>
         <constructor-arg ref="redisCache"></constructor-arg>
+    </bean>
+
+    <bean class="com.ecache.spring.ECacheBeanDefinitionRegistryPostProcessor">
+        <constructor-arg value="com.ecache.test"></constructor-arg>
     </bean>
 
 </beans>

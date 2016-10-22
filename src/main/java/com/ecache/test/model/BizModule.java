@@ -1,4 +1,4 @@
-package com.yy.ecache.model;
+package com.ecache.test.model;
 
 /**
  * @author 谢俊权

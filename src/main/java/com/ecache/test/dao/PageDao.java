@@ -1,8 +1,8 @@
-package com.yy.ecache.dao;
+package com.ecache.test.dao;
 
 
-import com.yy.ecache.model.PageData;
-import com.yy.ecache.model.UserInfo;
+import com.ecache.test.model.PageData;
+import com.ecache.test.model.UserInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

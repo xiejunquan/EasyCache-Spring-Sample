@@ -1,11 +1,11 @@
-package com.yy.ecache.controller;
+package com.ecache.test.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yy.ecache.model.BizModule;
-import com.yy.ecache.model.PageData;
-import com.yy.ecache.model.UserInfo;
-import com.yy.ecache.service.PageService;
-import com.yy.ecache.service.PageServiceInject;
+import com.ecache.test.model.PageData;
+import com.ecache.test.model.UserInfo;
+import com.ecache.test.service.PageService;
+import com.ecache.test.model.BizModule;
+import com.ecache.test.service.PageServiceInject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

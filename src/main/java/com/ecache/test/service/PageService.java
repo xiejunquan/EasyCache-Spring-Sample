@@ -1,13 +1,13 @@
-package com.yy.ecache.service;
+package com.ecache.test.service;
 
 import com.ecache.annotation.Cache;
 import com.ecache.annotation.LocalCache;
 import com.ecache.annotation.RemoteCache;
-import com.yy.ecache.RedisCache;
-import com.yy.ecache.dao.PageDao;
-import com.yy.ecache.model.BizModule;
-import com.yy.ecache.model.PageData;
-import com.yy.ecache.model.UserInfo;
+import com.ecache.test.RedisCache;
+import com.ecache.test.dao.PageDao;
+import com.ecache.test.model.BizModule;
+import com.ecache.test.model.PageData;
+import com.ecache.test.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,10 @@ public class PageService {
 
     @Autowired
     private PageDao pageDao;
+
+    public void setPageDao(PageDao pageDao) {
+        this.pageDao = pageDao;
+    }
 
     @LocalCache(key = "$1.biz $1.moduleId", expire = 60)
     public PageData<UserInfo> page(BizModule bm){

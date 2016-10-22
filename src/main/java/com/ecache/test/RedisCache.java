@@ -1,4 +1,4 @@
-package com.yy.ecache;
+package com.ecache.test;
 
 import com.ecache.CacheInterface;
 import redis.clients.jedis.Jedis;
