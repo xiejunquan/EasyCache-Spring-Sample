@@ -28,14 +28,14 @@ public class PageService {
         this.pageDao = pageDao;
     }
 
-    @LocalCache(key = "$1.biz $1.moduleId", expire = 60)
+    @LocalCache(key = "biz_{$1.biz}_moduleId_{$1.moduleId}", expire = 60)
     public PageData<UserInfo> page(BizModule bm){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "page from dao");
         return pageDao.page(bm.getBiz(), bm.getModuleId());
     }
 
-    @RemoteCache(key = "$1$2", expire = 60)
+    @RemoteCache(key = "biz_$1_moduleId_$2", expire = 60)
     public Map<String , PageData<UserInfo>> pageMap(String biz, int moduleId){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "pageMap from dao");
