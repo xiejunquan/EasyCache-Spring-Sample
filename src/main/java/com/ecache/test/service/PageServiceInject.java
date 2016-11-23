@@ -48,8 +48,8 @@ public class PageServiceInject {
                 new MissCacheHandler<Map<String , PageData<UserInfo>>>(biz, moduleId) {
                     @Override
                     public Map<String , PageData<UserInfo>> getData() {
-                        String biz = (String) params.get(0);
-                        int moduleId = (int) params.get(1);
+                        String biz = (String) params[0];
+                        int moduleId = (int) params[1];
                         long seconds = System.currentTimeMillis()/1000;
                         System.out.println(seconds + " : " + "pageMap from dao");
                         return pageDao.pageMap(biz, moduleId);
@@ -67,8 +67,8 @@ public class PageServiceInject {
                 new MissCacheHandler<List<UserInfo>>(biz, moduleId) {
                     @Override
                     public List<UserInfo> getData() {
-                        String biz = (String) params.get(0);
-                        int moduleId = (int) params.get(1);
+                        String biz = (String) params[0];
+                        int moduleId = (int) params[1];
                         long seconds = System.currentTimeMillis()/1000;
                         System.out.println(seconds + " : " + "list from dao");
                         return pageDao.page(biz, moduleId).getData();
