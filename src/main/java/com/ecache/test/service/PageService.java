@@ -2,7 +2,6 @@ package com.ecache.test.service;
 
 import com.ecache.annotation.Cache;
 import com.ecache.annotation.LocalCache;
-import com.ecache.annotation.RemoteCache;
 import com.ecache.test.RedisCache;
 import com.ecache.test.dao.PageDao;
 import com.ecache.test.model.BizModule;
@@ -28,21 +27,21 @@ public class PageService {
         this.pageDao = pageDao;
     }
 
-    @LocalCache(key = "biz_{$1.biz}_moduleId_{$1.moduleId}", expire = 60)
+    @LocalCache(key= "biz_{$1.biz}_moduleId_{$1.moduleId}", expired= 60)
     public PageData<UserInfo> page(BizModule bm){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "page from dao");
         return pageDao.page(bm.getBiz(), bm.getModuleId());
     }
 
-    @RemoteCache(key = "biz_$1_moduleId_$2", expire = 60)
+    @Cache(key = "biz_$1_moduleId_$2", expired = 60)
     public Map<String , PageData<UserInfo>> pageMap(String biz, int moduleId){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "pageMap from dao");
         return pageDao.pageMap(biz, moduleId);
     }
 
-    @Cache(instance = RedisCache.class, key = "$3", expire = 60)
+    @Cache(instance = RedisCache.class, key = "$3", expired = 60)
     public List<UserInfo> list(String biz, int moduleId, String key){
         long seconds = System.currentTimeMillis()/1000;
         System.out.println(seconds + " : " + "list from dao");

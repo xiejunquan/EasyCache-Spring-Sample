@@ -1,8 +1,8 @@
 package com.ecache.test.service;
 
-import com.ecache.MissCacheHandler;
-import com.ecache.RemoteCache;
 import com.ecache.CacheType;
+import com.ecache.MissCacheHandler;
+import com.ecache.test.RedisCache;
 import com.ecache.test.dao.PageDao;
 import com.ecache.test.model.PageData;
 import com.ecache.test.model.UserInfo;
@@ -23,17 +23,17 @@ public class PageServiceInject {
     private PageDao pageDao;
 
     @Autowired
-    private RemoteCache remoteCache;
+    private RedisCache redisCache;
 
     public PageData<UserInfo> page(String biz, int moduleId){
         String key = "PageServiceInject|page|"+biz+"|"+moduleId;
-        PageData<UserInfo> pageData = remoteCache.get(key, new CacheType<PageData<UserInfo>>(){});
+        PageData<UserInfo> pageData = redisCache.get(key, new CacheType<PageData<UserInfo>>(){});
         if(pageData == null){
             long seconds = System.currentTimeMillis()/1000;
             System.out.println(seconds + " : " + "page from dao");
             pageData = pageDao.page(biz, moduleId);
             if(pageData != null){
-                remoteCache.set(key, pageData, 60);
+                redisCache.set(key, pageData, 60);
             }
         }
         return pageData;
@@ -41,7 +41,7 @@ public class PageServiceInject {
 
     public Map<String , PageData<UserInfo>> pageMap(String biz, int moduleId){
         String key = "PageServiceInject|pageMap|"+biz+"|"+moduleId;
-        Map<String , PageData<UserInfo>> pageDataMap = remoteCache.get(
+        Map<String , PageData<UserInfo>> pageDataMap = redisCache.get(
                 key,
                 60,
                 new CacheType<Map<String , PageData<UserInfo>>>() {},
@@ -60,7 +60,7 @@ public class PageServiceInject {
 
     public List<UserInfo> list(String biz, int moduleId, String key){
         String cacheKey = "PageServiceInject|list|" + key;
-        List<UserInfo> list = remoteCache.get(
+        List<UserInfo> list = redisCache.get(
                 cacheKey,
                 60,
                 new CacheType<List<UserInfo>>() {},

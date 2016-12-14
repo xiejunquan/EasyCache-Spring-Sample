@@ -33,14 +33,11 @@
         <property name="maxWaitMillis" value="5000"></property>
     </bean>
     <bean id="redisCache" class="com.ecache.test.RedisCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
         <constructor-arg ref="redisConfig"></constructor-arg>
         <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
         <constructor-arg name="port" value="6380"></constructor-arg>
         <constructor-arg name="timeout" value="2000"></constructor-arg>
-    </bean>
-    <bean id="remoteCache" class="com.ecache.RemoteCache">
-        <constructor-arg ref="cacheConfig"></constructor-arg>
-        <constructor-arg ref="redisCache"></constructor-arg>
     </bean>
 
     <bean class="com.ecache.spring.ECacheBeanDefinitionRegistryPostProcessor">
