@@ -6,25 +6,31 @@ EasyCache-Spring是EasyCache和Spring的适配包, 其中已经包含了EasyCach
     <dependency>
         <groupId>EasyCache-Spring</groupId>
         <artifactId>EasyCache-Spring</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </dependency>
 
 ## 实现缓存的接口
-CacheInterface有get和set两个方法, 用于作为RemoteCache的调用接口, 你可以使用任意的存储实例来实现这两个方法(这里使用单实例的redis缓存来实现)
+继承AbstractEasyCache, 并实现getString和setString两个方法
 
-    public class RedisCache implements CacheInterface {
+    @DefaultCache
+    public class RedisCache extends AbstractEasyCache {
         private JedisPool jedisPool;
 
         public RedisCache(JedisPoolConfig config, String ip, int port, int timeout) {
-            this.jedisPool = new JedisPool(config, ip, port, timeout);
+            this(null, config, ip, port, timeout);
+        }
+
+        public RedisCache(CacheConfig cacheConfig, JedisPoolConfig jedisPoolConfig, String ip, int port, int timeout) {
+            super(cacheConfig);
+            this.jedisPool = new JedisPool(jedisPoolConfig, ip, port, timeout);
         }
 
         @Override
-        public void set(String key, String value, int expireSeconds) {
+        public String setString(String key, String value, int expiredSeconds) {
             Jedis jedis = null;
             try{
                 jedis = jedisPool.getResource();
-                jedis.setex(key, expireSeconds, value);
+                jedis.setex(key, expiredSeconds, value);
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
@@ -32,10 +38,11 @@ CacheInterface有get和set两个方法, 用于作为RemoteCache的调用接口, 
                     jedis.close();
                 }
             }
+            return value;
         }
 
         @Override
-        public String get(String key) {
+        public String getString(String key) {
             Jedis jedis = null;
             try{
                 jedis = jedisPool.getResource();
@@ -77,14 +84,11 @@ CacheInterface有get和set两个方法, 用于作为RemoteCache的调用接口, 
         <property name="maxWaitMillis" value="5000"></property>
     </bean>
     <bean id="redisCache" class="com.ecache.test.RedisCache">
+        <constructor-arg ref="cacheConfig"></constructor-arg>
         <constructor-arg ref="redisConfig"></constructor-arg>
         <constructor-arg name="ip" value="127.0.0.1"></constructor-arg>
         <constructor-arg name="port" value="6380"></constructor-arg>
         <constructor-arg name="timeout" value="2000"></constructor-arg>
-    </bean>
-    <bean id="remoteCache" class="com.ecache.RemoteCache">
-        <constructor-arg ref="cacheConfig"></constructor-arg>
-        <constructor-arg ref="redisCache"></constructor-arg>
     </bean>
 
     <!-- 如果要使EasyCache生效, 必须要配置这个对象 -->
