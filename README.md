@@ -76,7 +76,7 @@ EasyCache-Spring是EasyCache和Spring的适配包, 其中已经包含了EasyCach
         <constructor-arg ref="cacheConfig"></constructor-arg>
     </bean>
 
-    <!-- EasyCache的远程缓存配置 -->
+    <!-- EasyCache的自定义缓存配置 -->
     <bean id="redisConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="200"></property>
         <property name="maxIdle" value="20"></property>
@@ -91,13 +91,10 @@ EasyCache-Spring是EasyCache和Spring的适配包, 其中已经包含了EasyCach
         <constructor-arg name="timeout" value="2000"></constructor-arg>
     </bean>
 
-    <!-- 如果要使EasyCache生效, 必须要配置这个对象 -->
+    <!-- 如果要使EasyCache注解生效, 必须要配置这个对象 -->
     <bean class="com.ecache.spring.ECacheBeanDefinitionRegistryPostProcessor">
         <constructor-arg value="com.ecache.test"></constructor-arg>
     </bean>
 
-前面的配置都是为了初始化RemoteCache和LocalCache, 而最后一个配置是必须的, 它用于使@RemoteCache, @LocalCache和@Cache的注解生效
-
-至此, EasyCache就可以在你的Spring项目中跑起来了
 
 
